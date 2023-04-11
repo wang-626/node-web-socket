@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer>
+      document.addEventListener("DOMContentLoaded", () => {
+        const ws = new WebSocket("ws://localhost:4000");
+        const messageElement = document.querySelector(".message");
+        const textElement = document.querySelector(".text");
+        const submitElement = document.querySelector(".submit");
+
+        ws.addEventListener("message", ({ data }) => {
+          let message = `<p>${JSON.parse(data).message}</p>`;
+          messageElement.insertAdjacentHTML("afterbegin", message);
+          console.log(message);
+        });
+
+        submitElement.addEventListener("click", (event) => {
+          ws.send(JSON.stringify({ message: textElement.value }));
+        });
+      });
+    </script>
+  </head>
+  <body class="h-screen">
+    <div class="flex h-full w-full flex-col flex-wrap content-center">
+      <h1 class="container mx-5 mt-5 text-2xl">Websocket test</h1>
+      <div class="container m-5 h-5/6 rounded-lg border bg-slate-300 p-2">
+        <div class="message h-5/6"></div>
+        <div class="flex h-1/6 w-full content-center justify-center">
+          <input
+            class="text mx-2 my-auto h-10 flex-auto rounded-lg p-2"
+            type="text"
+            class="border"
+          />
+          <button class="submit mx-2 my-auto h-10 rounded-lg border p-2">
+            送出
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
